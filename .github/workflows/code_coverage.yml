@@ -18,7 +18,9 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
         
-      - uses: tintef/nyc-reporter-action@v0.2.5
+      - name: Comment coverage
+        if: always()
+        uses: Tintef/nyc-reporter-action@0.2.5
         with:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            REPORTER: 'text'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKIP_COVERAGE_FOLDER: 'true'
