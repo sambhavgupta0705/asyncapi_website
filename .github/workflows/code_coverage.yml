@@ -16,7 +16,7 @@ jobs:
         run: npm install
       
       - name: Instrumentation
-        run:  nyc instrument ./ instrumented
+        run:  npx nyc instrument ./ instrumented
 
       - name: Run tests with coverage
         run: npm run test:coverage
