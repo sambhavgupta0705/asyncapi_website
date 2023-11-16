@@ -1,0 +1,24 @@
+name: Code Coverage Report
+
+on:
+  pull_request:
+    branches:
+      - code_coverage_setup
+
+jobs:
+  code-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+        
+      - uses: tintef/nyc-reporter-action
+        with:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            REPORTER: 'text'
