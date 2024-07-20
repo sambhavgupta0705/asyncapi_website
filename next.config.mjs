@@ -6,16 +6,20 @@ import slug from 'remark-slug';
 import headingId from 'remark-heading-id';
 import remarkGfm from 'remark-gfm';
 import withMDX from '@next/mdx';
+import i18n from "./next-i18next.config.js"
 
 /**
  * @type {import('next').NextConfig}
  */
+
 const nextConfig = {
   pageExtensions: ['tsx', 'ts', 'md', 'mdx'],
   eslint: {
     ignoreDuringBuilds: true
   },
-  output: 'export',
+//   output: 'export',
+  i18n: i18n.i18n,
+  
   webpack(config, { isServer }) {
     if (!isServer) {
       config.resolve.fallback.fs = false;

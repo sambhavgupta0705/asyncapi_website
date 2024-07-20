@@ -1,4 +1,4 @@
-import { i18n } from '../next-i18next-static-site.config';
+import { i18n } from '../next-i18next.config.mjs';
 
 /**
  * Converts languages like 'en-US' to 'en'.

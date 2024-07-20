@@ -1,17 +1,19 @@
+import type { i18n, Module } from 'i18next';
+import i18next from 'i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import i18next, { i18n, Module } from 'i18next';
 import {
   initReactI18next,
-  useTranslation,
-  withTranslation,
-  Translation,
   Trans,
+  Translation,
+  useTranslation,
+  withTranslation
 } from 'react-i18next';
-import nextI18nextStaticSiteConfig from '../next-i18next-static-site.config';
+
+import nextI18nextStaticSiteConfig from '../next-i18next.config.js';
 
 // Translation exports from react-i18next
-export { useTranslation, withTranslation, Translation, Trans };
+export { Trans, Translation, useTranslation, withTranslation };
 
 interface Config {
   languages: string[];
@@ -29,23 +31,23 @@ const defaultConfig = {
   namespaces: ['common'],
   defaultNamespace: 'common',
   cookieName: 'lang',
-  cookieOptions: { expires: 365, path: '/' },
+  cookieOptions: { expires: 365, path: '/' }
 };
 
 const config: Config = {
   ...defaultConfig,
-  languages: nextI18nextStaticSiteConfig.i18n.languages,
-  defaultLanguage: nextI18nextStaticSiteConfig.i18n.defaultLanguage,
+  languages: nextI18nextStaticSiteConfig.i18n.locales,
+  defaultLanguage: nextI18nextStaticSiteConfig.i18n.defaultLocale,
   namespaces: nextI18nextStaticSiteConfig.i18n.namespaces,
-  defaultNamespace: nextI18nextStaticSiteConfig.i18n.defaultNamespace,
+  defaultNamespace: nextI18nextStaticSiteConfig.i18n.defaultNamespace
 };
 
-export const languages = config.languages;
-export const defaultLanguage = config.defaultLanguage;
-export const namespaces = config.namespaces;
-export const defaultNamespace = config.defaultNamespace;
+export const { languages } = config;
+export const { defaultLanguage } = config;
+export const { namespaces } = config;
+export const { defaultNamespace } = config;
 export const defaultNamespace2 = config.defaultNamespace;
-export const cookieName = config.cookieName;
+export const { cookieName } = config;
 
 /**
  * Creates an i18next instance with the provided locales and language.
@@ -57,7 +59,7 @@ const createI18nextInstance = (locales: any, language: string): i18n => {
   // i18n plugins to load
   const plugins = [
     //
-    initReactI18next,
+    initReactI18next
   ];
 
   plugins.map((plugin: Module) => i18next.use(plugin));
@@ -68,16 +70,16 @@ const createI18nextInstance = (locales: any, language: string): i18n => {
     cleanCode: true,
     lng: language,
     supportedLngs: config.languages,
-    fallbackLng: language ? language : config.defaultLanguage,
+    fallbackLng: language || config.defaultLanguage,
     ns: config.namespaces, // String or array of namespaces to load
     defaultNS: config.defaultNamespace, // Default namespace used if not passed to translation function
     interpolation: {
-      escapeValue: false, // Not needed for react as it escapes by default
+      escapeValue: false // Not needed for react as it escapes by default
     },
     react: {
-      useSuspense: false, // Not compatible with SSR
+      useSuspense: false // Not compatible with SSR
     },
-    load: 'languageOnly', // Remove if you want to use localization (en-US, en-GB)
+    load: 'languageOnly' // Remove if you want to use localization (en-US, en-GB)
   });
 
   return i18next;
@@ -97,11 +99,10 @@ export const i18nextInstance = (language: string, locales: object): i18n => {
     globalI18nextInstance = createI18nextInstance(locales, language);
 
     return globalI18nextInstance;
-  } else {
+  }
     globalI18nextInstance.changeLanguage(language);
 
     return globalI18nextInstance;
-  }
 };
 
 // Prevent rerender
@@ -155,6 +156,7 @@ export const I18nProvider = (props: any) => {
 
   useEffect(() => {
     const hasWindow = typeof window !== 'undefined';
+
     if (hasWindow && options.allowHydration) {
       setHydration(true);
     }
@@ -169,7 +171,7 @@ export const I18nProvider = (props: any) => {
  */
 export function getAllLanguageSlugs() {
   return config.languages.map((lang: string) => {
-    return { params: { lang: lang } };
+    return { params: { lang } };
   });
 }
 
@@ -201,9 +203,9 @@ export const languageDetection = () => {
     }
 
     if (browserLocale && languages.includes(browserLocale)) {
-      router.push('/' + browserLocale);
+      router.push(`/${  browserLocale}`);
     } else {
-      router.push('/' + defaultLanguage);
+      router.push(`/${  defaultLanguage}`);
     }
   }, [router, defaultLanguage]);
 
