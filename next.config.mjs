@@ -17,8 +17,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true
   },
-//   output: 'export',
-  i18n: i18n.i18n,
+  output: 'export',
+  
   
   webpack(config, { isServer }) {
     if (!isServer) {
