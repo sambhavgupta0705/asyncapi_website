@@ -11,7 +11,7 @@ In this guide, you'll learn multiple ways to validate AsyncAPI
 - Validation against the 
 - Validation against the best practices or company goernance ules also known as l
 ### Validate against specification
-Validating against the specification ensures that every content of the document is written in accordance with the AsyncAPI specification. Several tool options exist for validating against the specification: _AsyncAPI Studio_, _AsyncAPI CLI_, and _Parsers_.
+Validating against the specification ensures  every content of the document is written in accordance with the AsyncAPI specification. Several tool options exist for validating against the specification: _AsyncAPI Studio_, _AsyncAPI CLI_, and _Parsers_.
 
 #### AsyncAPI Studio validation 
 [AsyncAPI Studio](https://studi.asyncapi.com/) provides a visual and easy way to validate your AsyncAPI documents against the specification. (It uses the [AsyncAPI JavaScript parser](https://github.com/asyncapi/parser-js) behind the s]cenes to perform syntax checks and vlidate documents.)
