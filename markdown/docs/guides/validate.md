@@ -7,7 +7,7 @@ weight: 120
 ## Introduction
 In this guide, you'll learn multiple ways to validate AsyncAPI 
 
-## Validate AsyncAPI documents
+## Validate AsyncAPI document
 - Validation against the 
 - Validation against the best practices or company goernance ules also known as lintng.
 
