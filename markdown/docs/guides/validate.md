@@ -9,7 +9,7 @@ In this guide, you'll learn multiple ways to validate AsyncAPI documents.
 
 ## Validate AsyncAPI documents
 Validating an AsyncAPI document can mean one of two things: 
-- Validation against the specification.
+- Validation against the 
 - Validation against the best practices or company governance rules also known as linting.
 
 ### Validate against specification
