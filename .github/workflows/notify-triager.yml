@@ -73,7 +73,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: steps.non-md-pr-changes.outputs.any_changed == 'true'
+        if: steps.non-md-pr-changes.outputs.modified_files == 'true'
         env:
           ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
@@ -94,7 +94,7 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: steps.md-pr-changes.outputs.any_changed == 'true'
+        if: steps.md-pr-changes.outputs.modified_files == 'true'
         env:
           ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
