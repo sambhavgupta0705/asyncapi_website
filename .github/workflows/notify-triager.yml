@@ -75,7 +75,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: steps.md-pr-changes.outputs.all_changed_files_count!=steps.changed-files.outputs.all_changed_files_count
+        if: ${{ steps.changed-files.outputs.all_changed_files_count }}!=${{ steps.md-pr-changes.outputs.all_changed_files_count }}
         env:
           ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
@@ -83,8 +83,7 @@ jobs:
             echo "$file was changed"
           done
           echo "Hello1"
-          echo steps.md-pr-changes.outputs.all_changed_files_count
-          echo steps.changed-files.outputs.all_changed_files_count
+          echo ${{ steps.md-pr-changes.outputs.all_changed_files_count }}
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
           reviewers=$(printf ', "%s"' "${codeTriagers[@]}")
           reviewers=[${reviewers:2}]
