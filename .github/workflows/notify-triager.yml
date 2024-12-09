@@ -37,23 +37,20 @@ jobs:
       - name: Checkout asyncapi/website Repository
         uses: actions/checkout@v4.1.1
 
-      - name: Get all changed markdown files
-        id: changed-markdown-files
-        uses: tj-actions/changed-files@v45
+      - name: Check PR Changes for .md files
+        id: md-pr-changes
+        uses: tj-actions/changed-files@aa08304bd477b800d468db44fe10f6c61f7f7b11 # version 42.1.0 https://github.com/tj-actions/changed-files/releases/tag/v42.1.0
         with:
-          # Avoid using single or double quotes for multiline patterns
           files: |
-            validate.md
+            **.md
 
 
-      - name: Get all changed non-markdown files
-        id: changed-non-markdown-files
-        uses: tj-actions/changed-files@v45
+      - name: Check PR Changes for non-.md files
+        id: non-md-pr-changes
+        uses: tj-actions/changed-files@aa08304bd477b800d468db44fe10f6c61f7f7b11 # version 42.1.0 https://github.com/tj-actions/changed-files/releases/tag/v42.1.0
         with:
-          # Avoid using single or double quotes for multiline patterns
           files: |
-            crx.md
-
+            !**.md
 
 
       - name: Extract Doc Triage Maintainers
@@ -75,9 +72,14 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: steps.changed-non-markdown-files.outputs.any_changed == 'true'
+        if: steps.non-md-pr-changes.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
-          
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+          echo "Hello1"
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
           reviewers=$(printf ', "%s"' "${codeTriagers[@]}")
           reviewers=[${reviewers:2}]
@@ -91,8 +93,14 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: steps.changed-markdown-files.any_changed == 'true'
+        if: steps.md-pr-changes.outputs.any_changed == 'true'
+        env:
+          ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
+          echo "Hello"
           IFS=' ' read -r -a docTriagers <<< "${{ env.docTriagers }}"
           reviewers=$(printf ', "%s"' "${docTriagers[@]}")
           reviewers=[${reviewers:2}]
