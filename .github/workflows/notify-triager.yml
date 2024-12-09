@@ -69,7 +69,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: teps.check-merge-branch.outputs.isMergeCommit == 'false' && ${{ steps.changed-files.outputs.all_changed_files_count != steps.md-pr-changes.outputs.all_changed_files_count }}
+        if: steps.check-merge-branch.outputs.isMergeCommit == 'false' && ${{ steps.changed-files.outputs.all_changed_files_count != steps.md-pr-changes.outputs.all_changed_files_count }}
         run: |
           echo "Hello"
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
