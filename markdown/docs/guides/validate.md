@@ -16,7 +16,7 @@ Validating against the specification ensures  every content of the document is w
 #### AsyncAPI Studio validation 
 [AsyncAPI Studio](https://studi.asyncapi.com/) provides a visual and easy way to validate your AsyncAPI documents against the specification. (It uses the [AsyncAPI JavaScript parser](https://github.com/asyncapi/parser-js) behind the s]cenes to perform syntax checks and vlidate documents.)
 
-rs in your document are highlighted  a red underline, showig which lines are invalid. The `Diagnostics` section also provides feedback, allowing you to further troubleshoot with detailed error messages. When a document is , it  the following error: `Empty or invalid document please fix errors / define AsyncAPI document`.
+rs in your document are highlighted  a red underline,  which lines are invalid. The `Diagnostics` section also provides feedback, allowing you to further troubleshoot with detailed error messages. When a document is , it  the following error: `Empty or invalid document please fix errors / define AsyncAPI document`.
 
 #### AsyncAPI CLI validation 
 The following [AsyncAPI CLI](https://github.com/asyncapi/cli#installation) command validates AsyncAPI documents in your local computer or in CI/CD automation:
