@@ -83,6 +83,8 @@ jobs:
             echo "$file was changed"
           done
           echo "Hello1"
+          echo steps.md-pr-changes.outputs.all_changed_files_count
+          echo steps.changed-files.outputs.all_changed_files_count
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
           reviewers=$(printf ', "%s"' "${codeTriagers[@]}")
           reviewers=[${reviewers:2}]
