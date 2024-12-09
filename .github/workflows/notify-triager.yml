@@ -43,7 +43,7 @@ jobs:
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
-            **.md
+            validate.md
 
 
       - name: Get all changed non-markdown files
@@ -52,7 +52,7 @@ jobs:
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
-            !**.md
+            crx.md
 
 
 
@@ -77,6 +77,7 @@ jobs:
       - name: Add Reviewers for code files
         if: steps.changed-non-markdown-files.outputs.any_changed == 'true'
         run: |
+          
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
           reviewers=$(printf ', "%s"' "${codeTriagers[@]}")
           reviewers=[${reviewers:2}]
@@ -91,8 +92,6 @@ jobs:
 
       - name: Add Reviewers for doc files
         if: steps.changed-markdown-files.any_changed == 'true'
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-markdown-files.outputs.all_changed_files }}
         run: |
           IFS=' ' read -r -a docTriagers <<< "${{ env.docTriagers }}"
           reviewers=$(printf ', "%s"' "${docTriagers[@]}")
