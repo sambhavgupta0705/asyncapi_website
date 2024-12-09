@@ -37,7 +37,7 @@ jobs:
       - name: Checkout asyncapi/website Repository
         uses: actions/checkout@v4.1.1
 
-      - name: Get changed files
+      - name: Get all changed files
         id: changed-files
         uses: tj-actions/changed-files@v45
 
@@ -48,12 +48,6 @@ jobs:
           files: |
             **.md
             
-      - name: Check PR Changes for non-.md files
-        id: non-md-pr-changes
-        uses: tj-actions/changed-files@v45 # version 42.1.0 https://github.com/tj-actions/changed-files/releases/tag/v42.1.0
-        with:
-          files: |
-            !**.md
 
 
       - name: Extract Doc Triage Maintainers
@@ -75,16 +69,8 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: ${{ steps.changed-files.outputs.all_changed_files_count != steps.md-pr-changes.outputs.all_changed_files_count }}
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        if: teps.check-merge-branch.outputs.isMergeCommit == 'false' && ${{ steps.changed-files.outputs.all_changed_files_count != steps.md-pr-changes.outputs.all_changed_files_count }}
         run: |
-          for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
-          done
-          echo "Hello1"
-          echo ${{ steps.md-pr-changes.outputs.all_changed_files_count }}
-           echo ${{ steps.changed-files.outputs.all_changed_files_count }}
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
           reviewers=$(printf ', "%s"' "${codeTriagers[@]}")
           reviewers=[${reviewers:2}]
@@ -98,14 +84,8 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: steps.md-pr-changes.outputs.any_changed == 'true'
-        env:
-          ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
+        if: steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.md-pr-changes.outputs.any_changed == 'true'
         run: |
-          for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
-          done
-          echo "Hello"
           IFS=' ' read -r -a docTriagers <<< "${{ env.docTriagers }}"
           reviewers=$(printf ', "%s"' "${docTriagers[@]}")
           reviewers=[${reviewers:2}]
