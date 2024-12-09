@@ -75,7 +75,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: ${{ steps.changed-files.outputs.all_changed_files_count }} !=${{ steps.md-pr-changes.outputs.all_changed_files_count }} 
+        if: if: ${{ steps.changed-files.outputs.all_changed_files_count != steps.md-pr-changes.outputs.all_changed_files_count }}
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
