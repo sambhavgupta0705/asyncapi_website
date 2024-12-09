@@ -37,15 +37,17 @@ jobs:
       - name: Checkout asyncapi/website Repository
         uses: actions/checkout@v4.1.1
 
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+
       - name: Check PR Changes for .md files
         id: md-pr-changes
         uses: tj-actions/changed-files@v45 # version 42.1.0 https://github.com/tj-actions/changed-files/releases/tag/v42.1.0
         with:
           files: |
             **.md
-            docs/**.md
-
-
+            
       - name: Check PR Changes for non-.md files
         id: non-md-pr-changes
         uses: tj-actions/changed-files@v45 # version 42.1.0 https://github.com/tj-actions/changed-files/releases/tag/v42.1.0
@@ -73,7 +75,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: steps.non-md-pr-changes.outputs.modified_files == 'true'
+        if: steps.md-pr-changes.outputs.all_changed_files_count!=steps.changed-files.outputs.all_changed_files_count
         env:
           ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
@@ -94,7 +96,7 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: steps.md-pr-changes.outputs.modified_files == 'true'
+        if: steps.md-pr-changes.outputs.any_changed == 'true'
         env:
           ALL_CHANGED_FILES: ${{ steps.md-pr-changes.outputs.all_changed_files }}
         run: |
