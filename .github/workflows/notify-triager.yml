@@ -37,26 +37,30 @@ jobs:
       - name: Checkout asyncapi/website Repository
         uses: actions/checkout@v4.1.1
 
-      - name: Get changed files in the latest commit
-        id: changed_files
+      - name: Count changed files
+        id: file_counts
         run: |
           # Get the hash of the latest commit in the PR
           latest_commit_hash=$(git rev-parse HEAD)
 
           # Get the list of files changed in the latest commit
-          git diff-tree --no-commit-id --name-only -r $latest_commit_hash > latest_changed_files.txt
+          git diff-tree --no-commit-id --name-only -r $latest_commit_hash > changed_files.txt
 
-          # Output the changed files for debugging
-          echo "Files changed in the latest commit:"
-          cat latest_changed_files.txt
+          # Count the .md files
+          md_count=$(grep -E '\.md$' changed_files.txt | wc -l || echo 0)
 
-          # Save the list of files as a workflow output
-          echo "changed_files=$(cat latest_changed_files.txt | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          # Count the non-.md files
+          non_md_count=$(grep -Ev '\.md$' changed_files.txt | wc -l || echo 0)
 
-      # Step 3: Print the files changed
-      - name: Display changed files
+          # Output the counts
+          echo "md_count=$md_count" >> $GITHUB_OUTPUT
+          echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
+
+      # Step 3: Display the results
+      - name: Show file counts
         run: |
-          echo "Changed files in the latest commit: ${{ steps.changed_files.outputs.changed_files }}"
+          echo "Markdown files changed: ${{ steps.file_counts.outputs.md_count }}"
+          echo "Non-Markdown files changed: ${{ steps.file_counts.outputs.non_md_count }}"
 
 
       - name: Extract Doc Triage Maintainers
