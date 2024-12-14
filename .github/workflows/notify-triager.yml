@@ -41,11 +41,8 @@ jobs:
         id: file_counts
         run: |
           # Get the list of files changed in the latest commit
-          changed_files=$(git diff-tree --no-commit-id --name-only -r HEAD)
-
-           for file in $changed_files; do
-             echo "file is chnaged"
-           done    
+          changed_files=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.pull_request.head.sha }})
+          echo "Files changed: $changed_files"
 
 
 
