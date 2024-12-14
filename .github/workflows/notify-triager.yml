@@ -37,16 +37,21 @@ jobs:
       - name: Checkout asyncapi/website Repository
         uses: actions/checkout@v4.1.1
 
-      - name: Get all changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v45
-
-      - name: Check PR Changes for .md files
-        id: md-pr-changes
-        uses: tj-actions/changed-files@v45 # version 42.1.0 https://github.com/tj-actions/changed-files/releases/tag/v42.1.0
-        with:
-          files: |
-            **.md
+      - name: Get changed files
+        id: changed_files
+        run: |
+          # Get the list of files changed in the last commit of the PR
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          
+          # Filter and count .md files
+          md_count=$(grep -E '\.md$' changed_files.txt | wc -l || echo 0)
+          
+          # Count non-.md files
+          non_md_count=$(grep -Ev '\.md$' changed_files.txt | wc -l || echo 0)
+          
+          # Output counts
+          echo "md_count=$md_count" >> $GITHUB_OUTPUT
+          echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
             
 
 
@@ -69,7 +74,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed-files.outputs.all_changed_files_count != steps.md-pr-changes.outputs.all_changed_files_count }}
+        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.non_md_count>0 }}
 
         run: |
           echo "Hello"
@@ -86,7 +91,7 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.md-pr-changes.outputs.any_changed == 'true' }}
+        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.md_count>0 }}
 
         run: |
           IFS=' ' read -r -a docTriagers <<< "${{ env.docTriagers }}"
