@@ -1,7 +1,7 @@
 name: Notify Triagers
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, reopened, synchronize, edited, ready_for_review]
 
 jobs:
@@ -38,23 +38,8 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: Get changed files
-        id: changed_files
         run: |
-          # Get the list of files changed in the last commit of the PR
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
-          
-          # Filter and count .md files
-          md_count=$(grep -E '\.md$' changed_files.txt | wc -l || echo 0)
-          
-          # Count non-.md files
-          non_md_count=$(grep -Ev '\.md$' changed_files.txt | wc -l || echo 0)
-          
-          # Output counts
-          echo "md_count=$md_count" >> $GITHUB_OUTPUT
-          echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
-            
-
-
+          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
       - name: Extract Doc Triage Maintainers
         id: doc-triager
         run: |
