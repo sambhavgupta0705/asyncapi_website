@@ -19,4 +19,15 @@ jobs:
     - name: List files changed in the last commit
       run: |
         echo "Files changed in the last commit:"
-        git diff-tree --no-commit-id --name-only -r ${{ steps.get_last_commit.outputs.sha }}
+        changed_file=$(git diff-tree --no-commit-id --name-only -r ${{ steps.get_last_commit.outputs.sha }})
+        for file in $changed_files; do
+          if [[ $file == *.md ]]; then
+            md_count=$((md_count + 1))
+          else
+            non_md_count=$((non_md_count + 1))
+           fi
+        done
+        echo "Markdown files: $md_count"
+          echo "Non-Markdown files: $non_md_count"
+          echo "md_count=$md_count" >> $GITHUB_OUTPUT
+          echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
