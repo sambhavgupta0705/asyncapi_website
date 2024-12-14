@@ -37,13 +37,12 @@ jobs:
       - name: Checkout asyncapi/website Repository
         uses: actions/checkout@v4.1.1
 
-      - name: Count changed files
-        id: changed_files
+      - name: Get changed files
         run: |
-          # Get the list of files changed in the latest commit
-          changed_files=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.pull_request.head.sha }})
+          echo "Fetching changed files for PR #${{ github.event.pull_request.number }}"
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
           echo "Changed files:"
-          echo "$changed_files"
+          echo "$CHANGED_FILES"
 
           # Save the list as an output variable
           echo "changed_files=$changed_files" >> $GITHUB_OUTPUT
