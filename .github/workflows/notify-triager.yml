@@ -40,19 +40,25 @@ jobs:
       - name: Count changed files
         id: file_counts
         run: |
-          # Get the hash of the latest commit in the PR
-          latest_commit_hash=$(git rev-parse HEAD)
-
           # Get the list of files changed in the latest commit
-          git diff-tree --no-commit-id --name-only -r $latest_commit_hash > changed_files.txt
+          changed_files=$(git diff-tree --no-commit-id --name-only -r HEAD)
 
-          # Count the .md files
-          md_count=$(grep -E '\.md$' changed_files.txt | wc -l || echo 0)
+          # Initialize counters
+          md_count=0
+          non_md_count=0
 
-          # Count the non-.md files
-          non_md_count=$(grep -Ev '\.md$' changed_files.txt | wc -l || echo 0)
+          # Loop through the changed files to count .md and non-.md files
+          for file in $changed_files; do
+            if [[ $file == *.md ]]; then
+              md_count=$((md_count + 1))
+            else
+              non_md_count=$((non_md_count + 1))
+            fi
+          done
 
           # Output the counts
+          echo "Markdown files: $md_count"
+          echo "Non-Markdown files: $non_md_count"
           echo "md_count=$md_count" >> $GITHUB_OUTPUT
           echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
 
