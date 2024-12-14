@@ -38,25 +38,8 @@ jobs:
         uses: actions/checkout@v4.1.1
 
       - name: Get changed files
-        id: changed_files
         run: |
-          echo "Fetching changed files for PR #${{ github.event.pull_request.number }}"
-
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
-
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
-
-          # Save the list as an output variable
-          echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-
-      # Step 3: Display the changed files
-      - name: Display changed files
-        run: |
-          echo "Files changed in the latest commit: ${{ steps.changed_files.outputs.changed_files }}"
-
-
-
+          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
       - name: Extract Doc Triage Maintainers
         id: doc-triager
         run: |
