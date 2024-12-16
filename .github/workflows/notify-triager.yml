@@ -1,7 +1,7 @@
 name: Notify Triagers
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, synchronize, edited, ready_for_review]
 
 jobs:
@@ -11,8 +11,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4.1.1
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
 
       - name: Get commit message
         id: commit-message
@@ -34,12 +33,24 @@ jobs:
             echo "isMergeCommit=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Checkout asyncapi/website Repository
-        uses: actions/checkout@v4.1.1
-
-      - name: Get changed files
+      - name: Count changed files
+        id: changed_files
         run: |
-          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+          # Get the list of files changed in the latest commit
+          changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+
+          # Initialize counters
+          md_count=0
+          non_md_count=0
+
+          # Count .md files
+          md_count=$(echo "$changed_files" | grep -c '\.md$' || true)
+          # Count non-.md files
+          non_md_count=$(echo "$changed_files" | grep -vc '\.md$' || true)
+
+          echo "md_count=$md_count" >> $GITHUB_OUTPUT
+          echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
+
       - name: Extract Doc Triage Maintainers
         id: doc-triager
         run: |
@@ -59,10 +70,8 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.non_md_count>0 }}
-
+        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.non_md_count > 0 }}
         run: |
-          echo "Hello"
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
           reviewers=$(printf ', "%s"' "${codeTriagers[@]}")
           reviewers=[${reviewers:2}]
@@ -76,8 +85,7 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.md_count>0 }}
-
+        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.md_count > 0 }}
         run: |
           IFS=' ' read -r -a docTriagers <<< "${{ env.docTriagers }}"
           reviewers=$(printf ', "%s"' "${docTriagers[@]}")
