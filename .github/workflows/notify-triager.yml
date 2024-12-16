@@ -34,7 +34,7 @@ jobs:
           fi
 
       - name: Count changed files
-        id: file_counts
+        id: changed_files
         run: |
           # Get the list of files changed in the latest commit
           changed_files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
@@ -84,8 +84,7 @@ jobs:
           echo "codeTriagers=$codeTriagers" >> $GITHUB_ENV
 
       - name: Add Reviewers for code files
-        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.non_md_count>0 }}
-
+        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.non_md_count > 0 }}
         run: |
           echo "Hello"
           IFS=' ' read -r -a codeTriagers <<< "${{ env.codeTriagers }}"
@@ -101,8 +100,7 @@ jobs:
           }"
 
       - name: Add Reviewers for doc files
-        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.md_count>0 }}
-
+        if: ${{ steps.check-merge-branch.outputs.isMergeCommit == 'false' && steps.changed_files.outputs.md_count >0 }}
         run: |
           IFS=' ' read -r -a docTriagers <<< "${{ env.docTriagers }}"
           reviewers=$(printf ', "%s"' "${docTriagers[@]}")
