@@ -5,7 +5,7 @@ weight: 120
 ---
 
 ## Introduction
-In this guide, you'll learn multiple ways to validate AsyncAPI documents.
+In this guide, you'll learn multiple  to validate AsyncAPI documents.
 
 ## Validate AsyncAPI documents
 Validating an AsyncAPI document can mean one of two things: 
