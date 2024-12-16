@@ -1,33 +1,22 @@
-name: Get Changed Files in Last Commit
+name: Check Changed Files
 
 on:
   pull_request:
-    types: [synchronize, opened, reopened]
+    types: [opened, synchronize, reopened]
 
 jobs:
-  get-changed-files:
+  list-changed-files:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-    - name: Get the last commit SHA
-      id: get_last_commit
-      run: echo "::set-output name=sha::$(git rev-parse HEAD)"
+      - name: Get changed files
+        run: |
+          echo "Fetching changed files for PR #${{ github.event.pull_request.number }}"
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
 
-    - name: List files changed in the last commit
-      run: |
-        echo "Files changed in the last commit:"
-        changed_file=$(git diff-tree --no-commit-id --name-only -r ${{ steps.get_last_commit.outputs.sha }})
-        for file in $changed_files; do
-          if [[ $file == *.md ]]; then
-            md_count=$((md_count + 1))
-          else
-            non_md_count=$((non_md_count + 1))
-           fi
-        done
-        echo "Markdown files: $md_count"
-          echo "Non-Markdown files: $non_md_count"
-          echo "md_count=$md_count" >> $GITHUB_OUTPUT
-          echo "non_md_count=$non_md_count" >> $GITHUB_OUTPUT
