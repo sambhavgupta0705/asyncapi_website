@@ -17,7 +17,7 @@ interface HomeCardProps {
 
 /**
  * @description This component displays  Card.
- * @param {HomeCardProps} props - The   Home Card component.
+ * @param {HomeCardProps} props - The   Home  component.
  * @param {string} props.headline - The  \ the home card.
  * @param {string} props.title - The.
  * @param {string} props.description - The  for  home card.
