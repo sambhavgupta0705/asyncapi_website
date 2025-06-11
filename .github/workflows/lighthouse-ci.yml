@@ -58,7 +58,7 @@ jobs:
         with:
           name: lighthouse-report
           path: |
-            .lighthouseci/*.report.html
+            ${{ steps.lighthouse_audit.outputs}} 
                 
 
       - if: steps.should_run.outputs.shouldrun == 'true'
