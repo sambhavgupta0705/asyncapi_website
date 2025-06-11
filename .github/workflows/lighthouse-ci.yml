@@ -57,14 +57,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
-          path: |
-            .lighthouseci
+          path: ${{ github.workspace }}/.lighthouseci/
+
 
       - if: steps.should_run.outputs.shouldrun == 'true'
-        name: Debug Lighthouse Output
-        run: |
-          echo "Listing contents of .lighthouseci"
-          ls -la .lighthouseci || echo ".lighthouseci not found"
+        name: Check .lighthouseci contents
+        run: ls -la ${{ github.workspace }}/.lighthouseci || echo "Folder not found"
 
                 
 
