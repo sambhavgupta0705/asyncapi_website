@@ -59,6 +59,13 @@ jobs:
           name: lighthouse-report
           path: |
             .lighthouseci/*.report.html
+
+      - if: steps.should_run.outputs.shouldrun == 'true'
+        name: Debug Lighthouse Output
+        run: |
+          echo "Listing contents of .lighthouseci"
+          ls -la .lighthouseci || echo ".lighthouseci not found"
+
                 
 
       - if: steps.should_run.outputs.shouldrun == 'true'
