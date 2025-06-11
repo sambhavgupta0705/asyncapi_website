@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
-          path: ${{ github.workspace }}/.lighthouseci/
+          path: .lighthouseci/deploy_preview_4126_asyncapi_website_netlify_app-_-2025_06_11_19_16_19.report.html
 
 
       - if: steps.should_run.outputs.shouldrun == 'true'
