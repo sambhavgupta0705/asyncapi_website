@@ -58,7 +58,7 @@ jobs:
         with:
           name: lighthouse-report
           path: |
-            .lighthouseci/*.report.html
+            .lighthouseci
 
       - if: steps.should_run.outputs.shouldrun == 'true'
         name: Debug Lighthouse Output
