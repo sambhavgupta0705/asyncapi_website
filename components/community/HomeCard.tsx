@@ -20,7 +20,7 @@ interface HomeCardProps {
  * @param {HomeCardProps} props - The    ff
  * @param {string} props.headline - The  home card.
  * @param {string} props.title - The.
- * @param {string} props.description - The  for  home card.
+ * @param {string} props.description - The  for  home ca.
  * @param {string} props.btnText - The text for the button in the home card.
  * @param {string} props.link - The link for the button in the home card.
  * @param {string} props.className - Additional CSS classes for styling..
