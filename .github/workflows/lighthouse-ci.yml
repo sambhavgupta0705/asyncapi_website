@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-html-report
-          path: steps.lighthouse_audit.outputs
+          path: /home/runner/work/asyncapi_website/asyncapi_website/.lighthouseci 
 
 
 
