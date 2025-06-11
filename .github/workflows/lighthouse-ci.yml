@@ -53,11 +53,11 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number}}
 
       - if: steps.should_run.outputs.shouldrun == 'true'
-        name: Upload Lighthouse Artifacts
+        name: Upload Lighthouse HTML Report
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-report
-          path: ${{ steps.lighthouse_audit.outputs}} 
+          name: lighthouse-html-report
+          path: deploy_preview_4126_asyncapi_website_netlify_app-*-report.html
 
 
       - if: steps.should_run.outputs.shouldrun == 'true'
