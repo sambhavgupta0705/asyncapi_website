@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lighthouse-report
-          path: ${{ github.workspace }}/.lighthouseci/*
+          path: ${{ steps.lighthouse_audit.outputs}} 
 
 
       - if: steps.should_run.outputs.shouldrun == 'true'
