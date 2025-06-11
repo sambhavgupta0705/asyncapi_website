@@ -3,7 +3,7 @@ name: Lighthouse CI
 on:
   pull_request_target:
     branches:
-      - test_lighthouse
+      - testing_lighthouse
     types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
@@ -51,6 +51,15 @@ jobs:
           temporaryPublicStorage: true
         env:
           PR_NUMBER: ${{ github.event.pull_request.number}}
+
+      - if: steps.should_run.outputs.shouldrun == 'true'
+        name: Upload Lighthouse Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: |
+            .lighthouseci/*.report.html
+                
 
       - if: steps.should_run.outputs.shouldrun == 'true'
         name: Lighthouse Score Report
