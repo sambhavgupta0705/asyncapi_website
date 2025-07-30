@@ -80,17 +80,17 @@ jobs:
         name: Run release assets generation to make sure PR does not break it
         shell: bash
         run: npm run generate:assets --if-present
-
-
-      - name: Cache Cypress binary
+    
+      - if: steps.packagejson.outputs.exists == 'true' && matrix.os == 'macos-13'
+        name: Cache Cypress binary on macOS
         uses: actions/cache@v3
         with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            cypress-${{ runner.os }}-
-
-      - name: Install Cypress binary
+         path: ~/Library/Caches/Cypress
+         key: cypress-cache-macos-${{ hashFiles('**/package-lock.json') }}
+         restore-keys: |
+          cypress-cache-macos-
+      - if: steps.packagejson.outputs.exists == 'true' && matrix.os == 'macos-13'
+        name: Install Cypress Binary (macOS only)
         run: npx cypress install
 
       - if: steps.should_run.outputs.shouldrun == 'true' && steps.packagejson.outputs.exists == 'true'
@@ -101,7 +101,6 @@ jobs:
           wait-on: 'http://localhost:3000'  # Adjust port as needed
           wait-on-timeout: 120
           install: false  # Reuse existing dependencies
-
 
       # Run the test:md script and capture output
       - if: ${{ steps.packagejson.outputs.exists == 'true' && matrix.os == 'ubuntu-latest' }}
